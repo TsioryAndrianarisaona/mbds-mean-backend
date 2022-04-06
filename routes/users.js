@@ -3,6 +3,7 @@ let User = require("../model/user");
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
+const Matiere = require("../model/matiere");
 
 // create new user
 function create(req, res) {
@@ -33,7 +34,11 @@ function login(req, res) {
         var token = jwt.sign({ sub: user }, config.secret, {
             expiresIn: config.tokenDuration
           });
-          res.status(200).send({ auth: true, token: token, user:user });
+          let matieres =[];
+          if(user.isAdmin){
+            matieres = Matiere.find({prof : user.name});
+          }
+          res.status(200).send({ auth: true, token: token, user:user,matiere: matieres });
     });
 }
 //logout
