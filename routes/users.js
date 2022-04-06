@@ -34,11 +34,16 @@ function login(req, res) {
         var token = jwt.sign({ sub: user }, config.secret, {
             expiresIn: config.tokenDuration
           });
-          let matieres =[];
+         
           if(user.isAdmin){
-            matieres = Matiere.find({prof : user.name});
+           Matiere.find({prof : user.name},(err,matiere)=>{
+                return res.status(200).send({ auth: true, token: token, user:user,matiere: matiere });
+            });
           }
-          res.status(200).send({ auth: true, token: token, user:user,matiere: matieres });
+          else{
+           return res.status(200).send({ auth: true, token: token, user:user });
+          }
+       
     });
 }
 //logout

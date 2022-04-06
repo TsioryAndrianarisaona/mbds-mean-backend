@@ -14,7 +14,7 @@ function getAssignments(req, res){
         });
     }
     else{ 
-        Assignment.find({auteur : user.name}, (err, assignment) =>{
+        Assignment.find({auteur : user.sub.name}, (err, assignment) =>{
             if(err){res.send(err)}
             res.json({assignements: assignment, user: user});
         })
