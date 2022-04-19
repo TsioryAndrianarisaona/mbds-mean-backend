@@ -1,11 +1,11 @@
 let Assignment = require('../model/assignment');
-const matiere = require('../model/matiere');
 let Matiere = require('../model/matiere');
+var config = require('../config');
 // Récupérer tous les assignments (GET)
 function getAssignments(req, res){
     let user = req.user;
     if(user.sub.isAdmin){
-        Assignment.find((err, assignments) => {
+        Assignment.find({etat:{$ne: config.etatSupprime}},(err, assignments) => {
             if(err){
                 return res.send(err)
             }
@@ -14,12 +14,36 @@ function getAssignments(req, res){
         });
     }
     else{ 
-        Assignment.find({auteur : user.sub.name}, (err, assignment) =>{
+        Assignment.find({auteur : user.sub.name, etat:{$ne: config.etatSupprime}}, (err, assignment) =>{
             if(err){res.send(err)}
             res.json({assignements: assignment, user: user});
         })
+    }  
+}
+
+
+// Recuperation des etats selon etat
+function getAssignmentByEtat(req, res){
+    let user = req.user;
+    let state=req.body.etat;
+    if(state.length == 0){
+        state = [config.etatcree, config.etatDelivre,config.etatNote,config.etatDemandeSupprime,config.etatSupprime]
     }
-   
+    if(user.sub.isAdmin){
+        Assignment.find({etat:{$in: state}},(err, assignments) => {
+            if(err){
+                return res.send(err)
+            }
+    
+            return res.send(assignments);
+        });
+    }
+    else{ 
+        Assignment.find({auteur : user.sub.name, etat:{$in: state}}, (err, assignment) =>{
+            if(err){res.send(err)}
+            res.json({assignements: assignment, user: user});
+        })
+    }  
 }
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res){
@@ -34,7 +58,7 @@ function getAssignment(req, res){
 // Recuperer par matieres
 function assignementsByMatiere(req,res){
     let matiere = req.params.matiere;
-    Assignment.find({matiere : matiere}, (err, assignment) =>{
+    Assignment.find({matiere : matiere, etat:{$ne: config.etatSupprime}}, (err, assignment) =>{
         if(err){res.send(err)}
         res.json({assignements: assignment, user: user});
     })
@@ -50,10 +74,7 @@ function postAssignment(req, res){
     assignment.note = req.body.note;
     assignment.rendu = !assignment.note? false : req.body.rendu;
     assignment.remarques= req.body.remarques;
-
-    console.log("POST assignment reçu :");
-    console.log(assignment)
-
+    assignment.etat =  config.etatcree;
     assignment.save( (err) => {
         if(err){
             res.send('cant post assignment ', err);
@@ -64,10 +85,6 @@ function postAssignment(req, res){
 
 // Update d'un assignment (PUT)
 function updateAssignment(req, res) {
-
-    console.log("UPDATE recu assignment : ");
-    console.log(req.body);
-     
     Assignment.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, assignment) => {
         if (err) {
             console.log(err);
@@ -96,4 +113,4 @@ function deleteAssignment(req, res) {
 
 
 
-module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment,assignementsByMatiere};
+module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment,assignementsByMatiere,getAssignmentByEtat};

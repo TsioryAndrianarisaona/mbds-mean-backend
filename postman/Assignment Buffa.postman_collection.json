@@ -1,0 +1,249 @@
+{
+	"info": {
+		"_postman_id": "23b454a2-c542-4207-b2a8-c561ab628865",
+		"name": "Assignment Buffa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Tsiory Andrianarisaona\",\r\n    \"email\": \"tsioryrams@gmail.com\",\r\n    \"password\": \"test1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Api}}/signUp",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Prof",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"rloncaster3@theatlantic.com\",\r\n    \"password\": \"Brenda Janks\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Api}}/login",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Api}}/logout",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login elève",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"wgauchier0@cbslocal.com\",\r\n    \"password\": \"Herminia Sawday\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Api}}/login",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Assignment",
+			"item": [
+				{
+					"name": "All assignments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiX2lkIjoiNjI0ZDYzMGIxY2E5YzM5ZWJlODNiNjY5IiwiaWQiOjEsImVtYWlsIjoid2dhdWNoaWVyMEBjYnNsb2NhbC5jb20iLCJwYXNzd29yZCI6Ikhlcm1pbmlhIFNhd2RheSIsIm5hbWUiOiJXaWxseXQgR2F1Y2hpZXIiLCJpc0FkbWluIjpmYWxzZX0sImlhdCI6MTY1MDM0OTIwNCwiZXhwIjoxNjUwMzU3NjA0fQ.DTsOHLYbofy4vWaw_7VzGl-usEW1VeQ_bpxqSHTbOBY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Api}}/assignments",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update selon choix",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiX2lkIjoiNjI0ZDYzMGIxY2E5YzM5ZWJlODNiNjY5IiwiaWQiOjEsImVtYWlsIjoid2dhdWNoaWVyMEBjYnNsb2NhbC5jb20iLCJwYXNzd29yZCI6Ikhlcm1pbmlhIFNhd2RheSIsIm5hbWUiOiJXaWxseXQgR2F1Y2hpZXIiLCJpc0FkbWluIjpmYWxzZX0sImlhdCI6MTY1MDM0OTIwNCwiZXhwIjoxNjUwMzU3NjA0fQ.DTsOHLYbofy4vWaw_7VzGl-usEW1VeQ_bpxqSHTbOBY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"_id\": \"625e545be51371b35f1b29f7\",\r\n    \"nom\": \"Devoir Tsiory\",\r\n    \"etat\": 10\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Api}}/assignments",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"assignments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignement selon etat",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiX2lkIjoiNjI0ZDYzMGIxY2E5YzM5ZWJlODNiNjY5IiwiaWQiOjEsImVtYWlsIjoid2dhdWNoaWVyMEBjYnNsb2NhbC5jb20iLCJwYXNzd29yZCI6Ikhlcm1pbmlhIFNhd2RheSIsIm5hbWUiOiJXaWxseXQgR2F1Y2hpZXIiLCJpc0FkbWluIjpmYWxzZX0sImlhdCI6MTY1MDM1MDIyNiwiZXhwIjoxNjUwMzU4NjI2fQ.h301GXfPXe81o-oXG3RSy1xCf6wYpB3X88QC5cYdVTw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"etat\" : [10]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Api}}/assignments/etat",
+							"host": [
+								"{{Api}}"
+							],
+							"path": [
+								"assignments",
+								"etat"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Api",
+			"value": " http://localhost:8010/api",
+			"type": "string"
+		},
+		{
+			"key": "token\n",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

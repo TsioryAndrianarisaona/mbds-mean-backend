@@ -60,6 +60,7 @@ app.route(prefix + '/assignments')
   .post(auth,assignment.postAssignment)
   .put(auth,assignment.updateAssignment);
 
+app.route(prefix+'/assignments/etat').post(auth, assignment.getAssignmentByEtat);
   //user
 app.route(prefix+'/login').post(user.login);
 app.route(prefix+'/logout').get(user.logOut).post(user.logOut);
@@ -71,5 +72,3 @@ app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);
 
 module.exports = app;
-
-
