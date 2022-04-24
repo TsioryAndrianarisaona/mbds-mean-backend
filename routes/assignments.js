@@ -99,11 +99,23 @@ function getAssignment(req, res) {
             status: 400,
           });
     }
-    return res.send({
-        data: {assignments:[assignment]},
-        message: "",
-        status: 200,
-      });
+    if(assignment){
+        Matiere.find({name : assignment.matiere},(err,matiere)=>{
+            return res.send({
+                data: {assignments:[assignment],matiere:[matiere]},
+                message: "",
+                status: 200,
+              });
+        })
+    }
+    else{
+        return res.send({
+            data: {assignments:[],matiere:[],prof:[]},
+            message: "",
+            status: 200,
+          });
+    }
+   
   });
 }
 
