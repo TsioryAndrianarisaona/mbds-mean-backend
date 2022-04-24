@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');  
 var Matiere = new mongoose.Schema({  
   name: String,
-  prof: String
+  prof: String,
+  image: String
 });
 mongoose.model('Matiere', Matiere);
 
