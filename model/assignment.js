@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+var aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 
 let AssignmentSchema = Schema({
     id: Number,
@@ -12,6 +13,7 @@ let AssignmentSchema = Schema({
     remarques: String,
     etat: Number
 });
+AssignmentSchema.plugin(aggregatePaginate);
 /**
  * Liste des états :
  * -20 --supprimé

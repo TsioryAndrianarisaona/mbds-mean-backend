@@ -53,8 +53,7 @@ app.route(prefix + '/assignments/:id')
   .get(auth,assignment.getAssignment)
   .delete(auth,assignment.deleteAssignment);
 
-app.route(prefix+'/assignements/matieres/:matiere')
-.get(auth,assignment.assignementsByMatiere);
+
 
 app.route(prefix + '/assignments')
   .post(auth,assignment.postAssignment)

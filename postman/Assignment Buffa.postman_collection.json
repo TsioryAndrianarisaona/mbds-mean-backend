@@ -172,7 +172,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Assignement selon etat",
+					"name": "Get Assignement multi critère",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -205,6 +205,14 @@
 								"etat"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one assignment",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

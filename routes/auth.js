@@ -7,13 +7,21 @@ const verifyToken = (req, res, next) => {
     req.body.token || req.query.token || req.headers["x-access-token"] || req.headers["authorization"].split(' ')[1];
 
   if (!token) {
-    return res.status(403).send("Authentication required");
+    return res.send({
+      data: {},
+      message: "Authentificattion requis",
+      status: 400,
+    });
   }
   try {
     const decoded = jwt.verify(token, config.secret);
     req.user = decoded;
   } catch (err) {
-    return res.status(401).send("Invalid Authentication");
+    return res.send({
+      data: {},
+      message: "Session invalid",
+      status: 401,
+    });
   }
   return next();
 };

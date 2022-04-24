@@ -1,116 +1,203 @@
-let Assignment = require('../model/assignment');
-let Matiere = require('../model/matiere');
-var config = require('../config');
+let Assignment = require("../model/assignment");
+let Matiere = require("../model/matiere");
+var config = require("../config");
 // Récupérer tous les assignments (GET)
-function getAssignments(req, res){
-    let user = req.user;
-    if(user.sub.isAdmin){
-        Assignment.find({etat:{$ne: config.etatSupprime}},(err, assignments) => {
-            if(err){
-                return res.send(err)
-            }
-    
-            return res.send(assignments);
-        });
-    }
-    else{ 
-        Assignment.find({auteur : user.sub.name, etat:{$ne: config.etatSupprime}}, (err, assignment) =>{
-            if(err){res.send(err)}
-            res.json({assignements: assignment, user: user});
-        })
-    }  
+function getAssignments(req, res) {
+  let user = req.user;
+  if (user.sub.isAdmin) {
+    Assignment.find(
+      { etat: { $ne: config.etatSupprime } },
+      (err, assignments) => {
+        if (err) {
+          return res.send(err);
+        }
+
+        return res.send(assignments);
+      }
+    );
+  } else {
+    Assignment.find(
+      { auteur: user.sub.name, etat: { $ne: config.etatSupprime } },
+      (err, assignment) => {
+        if (err) {
+          res.send(err);
+        }
+        res.json({ assignements: assignment, user: user });
+      }
+    );
+  }
 }
 
-
-// Recuperation des etats selon etat
-function getAssignmentByEtat(req, res){
-    let user = req.user;
-    let state=req.body.etat;
-    if(state.length == 0){
-        state = [config.etatcree, config.etatDelivre,config.etatNote,config.etatDemandeSupprime,config.etatSupprime]
-    }
-    if(user.sub.isAdmin){
-        Assignment.find({etat:{$in: state}},(err, assignments) => {
-            if(err){
-                return res.send(err)
-            }
-    
-            return res.send(assignments);
+// Recuperation avec pagination et critère
+function getAssignmentByEtat(req, res) {
+  let user = req.user;
+  let state = req.body.etat;
+  if (!user) {
+    return res.send({
+      data: {},
+      message: "Session invalide",
+      status: 401,
+    });
+  }
+  if (state.length == 0) {
+    state = [
+      config.etatcree,
+      config.etatDelivre,
+      config.etatNote,
+      config.etatDemandeSupprime,
+      config.etatSupprime,
+    ];
+  }
+  let where={
+   
+  }
+  if(!user.sub.isAdmin){
+    where["auteur"] = user.sub.name;
+  }
+  where["etat"] = {$in: state}
+  if(req.body.matiere && req.body.matiere.length != 0){
+      where["matiere"] = req.body.matiere;
+  }
+  console.log(where);
+    let options = {
+      page: parseInt(req.body.page) || 1,
+      limit: parseInt(req.query.limit) || 10,
+    };
+    var aggregateQuery = Assignment.aggregate([{$match:where}]);
+    Assignment.aggregatePaginate(
+      aggregateQuery,
+      options,
+      (err, assignments) => {
+        if (err) {
+          return res.send({
+            data: {},
+            message: "Erreur lors pour les assignments",
+            status: 400,
+          });
+        }
+        return res.send({
+          data: {
+            assignments: assignments.docs,
+            total: assignments.totalDocs,
+            page: assignments.page,
+            limit: assignments.limit,
+          },
+          message: "",
+          status: 200,
         });
-    }
-    else{ 
-        Assignment.find({auteur : user.sub.name, etat:{$in: state}}, (err, assignment) =>{
-            if(err){res.send(err)}
-            res.json({assignements: assignment, user: user});
-        })
-    }  
+      }
+    );
 }
 // Récupérer un assignment par son id (GET)
-function getAssignment(req, res){
-    let assignmentId = req.params.id;
-   
-    Assignment.findOne({id: assignmentId}, (err, assignment) =>{
-        if(err){res.send(err)}
-        res.json(assignment);
-    })
+function getAssignment(req, res) {
+  let assignmentId = req.params.id;
+  Assignment.findOne({ _id: assignmentId }, (err, assignment) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json(assignment);
+  });
 }
 
-// Recuperer par matieres
-function assignementsByMatiere(req,res){
-    let matiere = req.params.matiere;
-    Assignment.find({matiere : matiere, etat:{$ne: config.etatSupprime}}, (err, assignment) =>{
-        if(err){res.send(err)}
-        res.json({assignements: assignment, user: user});
-    })
-}
 
 // Ajout d'un assignment (POST)
-function postAssignment(req, res){
-    let assignment = new Assignment();
-    assignment.id = req.body.id;
-    assignment.nom = req.body.nom;
-    assignment.dateDeRendu = req.body.dateDeRendu;
-    assignment.auteur = req.body.auteur;
-    assignment.note = req.body.note;
-    assignment.rendu = !assignment.note? false : req.body.rendu;
-    assignment.remarques= req.body.remarques;
-    assignment.etat =  config.etatcree;
-    assignment.save( (err) => {
-        if(err){
-            res.send('cant post assignment ', err);
-        }
-        res.json({ message: `${assignment.nom} saved!`})
-    })
+function postAssignment(req, res) {
+  let assignment = new Assignment();
+  assignment.id = req.body.id;
+  assignment.nom = req.body.nom;
+  assignment.dateDeRendu = req.body.dateDeRendu;
+  assignment.auteur = req.body.auteur;
+  assignment.note = req.body.note;
+  assignment.rendu = !assignment.note ? false : req.body.rendu;
+  assignment.remarques = req.body.remarques;
+  assignment.etat = config.etatcree;
+  if(assignment.note && assignment.note < 0){
+    return res.send({
+        data: {},
+        message: "Le note ne peut pas être négatif",
+        status: 400,
+      });
+  }
+  assignment.save((err) => {
+    if (err) {
+        return res.send({
+            data: {},
+            message: "Erreur lors de l'enregistrement",
+            status: 400,
+          });
+    }
+    return res.send({
+        data: {},
+        message: "Enregistrement effectué",
+        status: 201,
+      });
+  });
 }
 
 // Update d'un assignment (PUT)
 function updateAssignment(req, res) {
-    Assignment.findByIdAndUpdate(req.body._id, req.body, {new: true}, (err, assignment) => {
-        if (err) {
-            console.log(err);
-            res.send(err)
-        } else {
-          res.json({message: 'updated'})
+    let user = req.user;
+    if(req.body.note ){
+        if(!user.sub.isAdmin){
+            return res.send({
+                data: {},
+                message: "Authorisation requise",
+                status: 400,
+              }); 
         }
+        if(req.body.note < 0){
+            return res.send({
+                data: {},
+                message: "Les notes ne peuvent pas être négatif",
+                status: 400,
+              });
+        }
+        req.body.rendu = true;
+        req.body.etat = 20;      
+    }
+    
+  Assignment.findByIdAndUpdate(
+    req.body._id,
+    req.body,
+    { new: false },
+    (err, assignment) => {
+      if (err) {
+        return res.send({
+            data: {},
+            message: "Erreur lors du mis à jour",
+            status: 400,
+          });
+      } else {
+        return res.send({
+            data: {},
+            message: "Enregistrement effectué",
+            status: 201,
+          });
+      }
 
       // console.log('updated ', assignment)
-    });
+    }
+  );
 }
 
 // suppression d'un assignment (DELETE)
 function deleteAssignment(req, res) {
-    if(!req.user.sub.isAdmin){
-        return res.send("Not enough permission");
-     }
-    Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
-        if (err) {
-            res.send(err);
-        }
-        res.json({message: `${assignment.nom} deleted`});
-    })
+  if (!req.user.sub.isAdmin) {
+    return res.send("Not enough permission");
+  }
+  Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
+    if (err) {
+      res.send(err);
+    }
+    res.json({ message: `${assignment.nom} deleted` });
+  });
 }
 
-
-
-
-module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment,assignementsByMatiere,getAssignmentByEtat};
+module.exports = {
+  getAssignments,
+  postAssignment,
+  getAssignment,
+  updateAssignment,
+  deleteAssignment,
+  getAssignmentByEtat
+};
