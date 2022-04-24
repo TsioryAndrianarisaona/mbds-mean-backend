@@ -93,9 +93,17 @@ function getAssignment(req, res) {
   let assignmentId = req.params.id;
   Assignment.findOne({ _id: assignmentId }, (err, assignment) => {
     if (err) {
-      res.send(err);
+        return res.send({
+            data: {},
+            message: "Erreur lors de la recherche ",
+            status: 400,
+          });
     }
-    res.json(assignment);
+    return res.send({
+        data: {assignments:[assignment]},
+        message: "",
+        status: 200,
+      });
   });
 }
 
