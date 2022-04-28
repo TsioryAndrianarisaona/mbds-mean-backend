@@ -183,7 +183,7 @@ function updateAssignment(req, res) {
         req.body.rendu = true;
         req.body.etat = 20;
 		let date_ob = new Date();
-		req.body.dateDeRendu = date_ob.getDate()+"/"+(date_ob.getMonth()+1)+"/"+(date_ob.getFullYear());
+		req.body.dateDeRendu = date_ob;
     }
     
   Assignment.findByIdAndUpdate(
