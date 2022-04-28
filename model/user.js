@@ -3,7 +3,8 @@ var User = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  isAdmin :Boolean
+  isAdmin :Boolean,
+  image: String
 });
 mongoose.model('User', User);
 

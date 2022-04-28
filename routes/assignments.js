@@ -58,12 +58,17 @@ function getAssignmentByEtat(req, res) {
   if(req.body.matiere && req.body.matiere.length != 0){
       where["matiere"] = req.body.matiere;
   }
-  console.log(where);
+  let join ={
+	from: "matieres",
+	localField: "matiere",
+	foreignField: "name",
+	as: "matiereDetails"
+	};
     let options = {
       page: parseInt(req.body.page) || 1,
       limit: parseInt(req.query.limit) || 10,
     };
-    var aggregateQuery = Assignment.aggregate([{$match:where}]);
+    var aggregateQuery = Assignment.aggregate([{$match:where},{$lookup:join}]);
     Assignment.aggregatePaginate(
       aggregateQuery,
       options,
@@ -127,10 +132,13 @@ function postAssignment(req, res) {
   assignment.nom = req.body.nom;
   assignment.dateDeRendu = req.body.dateDeRendu;
   assignment.auteur = req.body.auteur;
+  assignment.matiere = req.body.matiere;
   assignment.note = req.body.note;
   assignment.rendu = !assignment.note ? false : req.body.rendu;
   assignment.remarques = req.body.remarques;
   assignment.etat = config.etatcree;
+  assignement.dateLimite=req.body.dateLimite;
+  
   if(assignment.note && assignment.note < 0){
     return res.send({
         data: {},
@@ -173,7 +181,9 @@ function updateAssignment(req, res) {
               });
         }
         req.body.rendu = true;
-        req.body.etat = 20;      
+        req.body.etat = 20;
+		let date_ob = new Date();
+		req.body.dateLimite = date_ob.getDay()+"/"+(date_ob.getMonth()+1)+date_ob.getYear();
     }
     
   Assignment.findByIdAndUpdate(
