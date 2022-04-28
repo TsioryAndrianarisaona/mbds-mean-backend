@@ -183,7 +183,7 @@ function updateAssignment(req, res) {
         req.body.rendu = true;
         req.body.etat = 20;
 		let date_ob = new Date();
-		req.body.dateDeRendu = date_ob.getDay()+"/"+(date_ob.getMonth()+1)+date_ob.getYear();
+		req.body.dateDeRendu = date_ob.getDay()+"/"+(date_ob.getMonth()+1)+"/"+date_ob.getYear();
     }
     
   Assignment.findByIdAndUpdate(
@@ -192,6 +192,7 @@ function updateAssignment(req, res) {
     { new: false },
     (err, assignment) => {
       if (err) {
+        console.log(err);
         return res.send({
             data: {},
             message: "Erreur lors du mis à jour",
