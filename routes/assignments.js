@@ -137,7 +137,7 @@ function postAssignment(req, res) {
   assignment.rendu = !assignment.note ? false : req.body.rendu;
   assignment.remarques = req.body.remarques;
   assignment.etat = config.etatcree;
-  assignement.dateLimite=req.body.dateLimite;
+  assignment.dateLimite=req.body.dateLimite;
   
   if(assignment.note && assignment.note < 0){
     return res.send({
