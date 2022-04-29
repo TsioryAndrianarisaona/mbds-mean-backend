@@ -16,7 +16,7 @@ Avant de commencer, installez les logiciels suivants
 
 ### Installation
 
- - Pour les tests locals, clonez le projet [backend](https://gitlab.com/m10221/backend) 
+ - Pour les tests locals, clonez le projet [backend](https://github.com/TsioryAndrianarisaona/mbds-mean-backend) 
 Ensuite, basculez-vous dans la branche env/local en lançant la commande  ``git checkout env/local`` ou utilisez des  outils comme SourceTree (ou Smart Git, ....)
  - Pour la base de données, dans un terminal, lancez la commande ``mongo`` pour vérifier si vous avez installé un MongoDB Serveur. Puis créez une base donnée appelé *assignments*  en lancant la commande ``use assignments``. Créez également les collections *matieres, users, assignements* dans cette base. Importer les json user.json, assignment.json, matiere.json
  
