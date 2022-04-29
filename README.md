@@ -16,7 +16,7 @@ Avant de commencer, installez les logiciels suivants
 
 ### Installation
 
- - Pour les test local, clonez le projet [backend](https://gitlab.com/m10221/backend) 
+ - Pour les tests locals, clonez le projet [backend](https://gitlab.com/m10221/backend) 
 Ensuite, basculez-vous dans la branche env/local en lançant la commande  ``git checkout env/local`` ou utilisez des  outils comme SourceTree (ou Smart Git, ....)
  - Pour la base de données, dans un terminal, lancez la commande ``mongo`` pour vérifier si vous avez installé un MongoDB Serveur. Puis créez une base donnée appelé *assignments*  en lancant la commande ``use assignments``. Créez également les collections *matieres, users, assignements* dans cette base. Importer les json user.json, assignment.json, matiere.json
  
@@ -26,7 +26,7 @@ Ensuite, basculez-vous dans la branche env/local en lançant la commande  ``git 
  - Dans le terminal de VS Code, lancez la commande  ``npm install`` afin installer les modules nécessaire 
  - Puis lancez la commande  ``npm start``
 
-## Fabriqué avec
+## Developpé avec
 * [NodeJS](http://materializecss.com) - Framework JS (backend)
 * [Express](https://expressjs.com/fr/) - Utilitaires HTTP
 * [VS Code](https://atom.io/) - Editeur de textes
