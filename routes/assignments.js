@@ -58,12 +58,17 @@ function getAssignmentByEtat(req, res) {
   if(req.body.matiere && req.body.matiere.length != 0){
       where["matiere"] = req.body.matiere;
   }
-  console.log(where);
+  let join ={
+	from: "matieres",
+	localField: "matiere",
+	foreignField: "name",
+	as: "matiereDetails"
+	};
     let options = {
       page: parseInt(req.body.page) || 1,
       limit: parseInt(req.query.limit) || 10,
     };
-    var aggregateQuery = Assignment.aggregate([{$match:where}]);
+    var aggregateQuery = Assignment.aggregate([{$match:where},{$lookup:join}]);
     Assignment.aggregatePaginate(
       aggregateQuery,
       options,
@@ -127,10 +132,13 @@ function postAssignment(req, res) {
   assignment.nom = req.body.nom;
   assignment.dateDeRendu = req.body.dateDeRendu;
   assignment.auteur = req.body.auteur;
+  assignment.matiere = req.body.matiere;
   assignment.note = req.body.note;
   assignment.rendu = !assignment.note ? false : req.body.rendu;
   assignment.remarques = req.body.remarques;
   assignment.etat = config.etatcree;
+  assignment.dateLimite=req.body.dateLimite;
+  
   if(assignment.note && assignment.note < 0){
     return res.send({
         data: {},
@@ -173,7 +181,9 @@ function updateAssignment(req, res) {
               });
         }
         req.body.rendu = true;
-        req.body.etat = 20;      
+        req.body.etat = 20;
+		let date_ob = new Date();
+		req.body.dateDeRendu = date_ob;
     }
     
   Assignment.findByIdAndUpdate(
@@ -182,6 +192,7 @@ function updateAssignment(req, res) {
     { new: false },
     (err, assignment) => {
       if (err) {
+        console.log(err);
         return res.send({
             data: {},
             message: "Erreur lors du mis à jour",

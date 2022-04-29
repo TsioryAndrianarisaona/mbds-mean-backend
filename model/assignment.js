@@ -11,7 +11,8 @@ let AssignmentSchema = Schema({
     matiere: String,
     note: Number,
     remarques: String,
-    etat: Number
+    etat: Number,
+	dateLimite: Date
 });
 AssignmentSchema.plugin(aggregatePaginate);
 /**
