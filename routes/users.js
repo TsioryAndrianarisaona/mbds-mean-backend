@@ -16,9 +16,13 @@ function create(req, res) {
         }, 
         function (err, user) {
             if (err) return res.status(500).send(err);
-            var token = jwt.sign({sub: user}, config.secret, {
+            let configToken = {
+                name: user.name, isAdmin: user.isAdmin
+            }
+            var token = jwt.sign({sub: configToken}, config.secret, {
                 expiresIn: config.tokenDuration
               });
+              console.log(token);
               res.status(200).send({ auth: true, token: token, user:user });
         });
 }
@@ -31,7 +35,10 @@ function login(req, res) {
     }, function (err, user) {
         if (err) return res.status(500).send(err);
         if (!user) return res.status(404).send("No user found.");
-        var token = jwt.sign({ sub: user }, config.secret, {
+        let configToken = {
+            name: user.name, isAdmin: user.isAdmin
+        }
+        var token = jwt.sign({sub: configToken}, config.secret, {
             expiresIn: config.tokenDuration
           });
          
