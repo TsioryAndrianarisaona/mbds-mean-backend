@@ -56,7 +56,7 @@ function getAssignmentByEtat(req, res) {
   }
   where["etat"] = {$in: state}
   if(req.body.matiere && req.body.matiere.length != 0){
-      where["matiere"] = req.body.matiere;
+      where["matiere"] = {$in:req.body.matiere};
   }
   let join ={
 	from: "matieres",
